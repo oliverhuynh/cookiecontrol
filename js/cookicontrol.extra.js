@@ -123,8 +123,7 @@
           refresh: function() {
             var s;
             s = this.state ? "on" : "off";
-            this.h.setCookie("cat_" + this.id, s);
-            return CookieControl.options.protectedCookies.push("cat_" + this.id);
+            return this.h.setCookie("cat_" + this.id, s);
           },
           // Do exec will be executed in next reload only via CookieControl.min
           // @doexec()
@@ -150,6 +149,7 @@
           this.dom = $dom;
           this.h = h;
           this.id = this.dom.attr("id");
+          CookieControl.options.protectedCookies.push("cccat_" + this.id);
           this.initToggle();
         },
         /*
