@@ -6,6 +6,7 @@ core = 7.x
 
 configure = admin/config/people/cookiecontrol
 
+scripts[] = js/cookicontrol.extra.js
 scripts[] = js/cookieControl-5.1.min.js
 stylesheets[all][] = js/cookieControl.css
 

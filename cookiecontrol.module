@@ -109,7 +109,7 @@ function cookiecontrol_preprocess_html(&$variables) {
     $cookiecontrol_countries = variable_get('cookiecontrol_countries', '');
     $cookiecontrol_theme = variable_get('cookiecontrol_theme', 'dark');
     $cookiecontrol_cookiename = cookiecontrol_generatesitecookie();
-    $cookiecontrol_consentmodel = variable_get('cookiecontrol_consentmodel', 'explicit');
+    $cookiecontrol_consentmodel = variable_get('cookiecontrol_consentmodel', 'implicit');
 
     $cookiecontrol_settings = "
     jQuery(document).ready(function($) {
