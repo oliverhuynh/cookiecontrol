@@ -273,3 +273,41 @@ function cookiecontrol_userinrestrictedcountry() {
     return TRUE;
   }
 }
+
+function wrap_script_tag($str, $func) {
+  $doc = new DOMDocument();
+  $doc->loadHTML($str);
+  $selector = new DOMXPath($doc);
+
+  $result = $selector->query('//script');
+  $src = "";
+  foreach($result as $node) {
+    $src = $node->getAttribute('src');
+    break;
+  }
+  $str = str_replace("script", "noscript", $str);
+  return $str . _func_str($func, $src);
+}
+
+function _func_str($func, $src) {
+  if (!$src) {
+  return <<<EOX
+<script type="text/javascript">
+function {$func}() {
+  console.warn("Cookie control src empty");
+}
+</script>
+EOX;
+}
+
+  return <<<EOT
+<script type="text/javascript">
+function {$func}() {
+    var script = document.createElement("script"); // Make a script DOM node
+    script.src = "$src";
+
+    document.body.appendChild(script); // Add it to the end of the head section of the page (could change 'head' to 'body' to add it to the end of the body section instead)
+}
+</script>
+EOT;
+}

@@ -8,31 +8,48 @@
           execs: ["ccAddHtmlClass"]
         },
         cbdpreferenece: {
-          required: false
+          required: false,
+          cookies: ["lang", "recent_slide", "atp_jplayer"]
         },
         cbdstatistics: {
           required: false,
-          execs: ["ccAddAnalytics"]
+          execs: ["ccAddAnalytics", "ccAddLinkedIn"],
+          cookies: ["_ga", "_gat", "_gid"]
         },
         cbdmarketing: {
-          required: false
+          required: false,
+          execs: ["addThisExec"]
         }
       },
+      unload: function() {
+        return $.each(this.categories, function() {
+          return this.unload();
+        });
+      },
       attach: function(h) {
+        var t;
         this.h = h;
         this.category.scan($(".cbwrapper"), h);
+        /*
+        exec is triggered in cookicontrol 5.1
+        if @h.consented()
+          @exec()
+        */
+        t = this;
+        $(window).on('beforeunload', function() {
+          t.unload();
+        });
       },
-      /*
-      exec is triggered in cookicontrol 5.1
-      if @h.consented()
-        @exec()
-      */
       categories: [],
+      enable: true,
       accept: function() {},
       // When user check accept only, not initially
-      deny: function() {},
+      deny: function() {
+        return this.enable = false;
+      },
       allow: function() {
-        return this.exec();
+        this.exec();
+        return this.enable = true;
       },
       exec: function() {
         return $.each(this.categories, function() {
@@ -48,6 +65,24 @@
         Toggle
         */
         state: true,
+        unload: function() {
+          var $h, cks;
+          if (!this.state || !CookieControlSt.enable) {
+            cks = window.CookieControlSt.plugins[this.id].cookies || [];
+            console.warn("Clean cookies for " + this.id);
+            $h = this.h;
+            return $.each(cks, function() {
+              var ck, e;
+              ck = this;
+              try {
+                return $h.delCookie(ck);
+              } catch (error) {
+                e = error;
+                return console.warn(e);
+              }
+            });
+          }
+        },
         doexec: function() {
           var s;
           s = this.state ? "on" : "off";
@@ -133,4 +168,3 @@
       }
     };
   })(jQuery, window);
-
