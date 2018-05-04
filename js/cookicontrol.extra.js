@@ -22,9 +22,13 @@
         }
       },
       unload: function() {
-        return $.each(this.categories, function() {
+        console.warn("Unload and cleaning cookies");
+        $.each(this.categories, function() {
           return this.unload();
         });
+        if (!this.enable) {
+          return CookieControl.delAllCookies(CookieControl.options.protectedCookies);
+        }
       },
       attach: function(h) {
         var t;
