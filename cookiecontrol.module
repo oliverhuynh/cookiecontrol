@@ -88,19 +88,19 @@ function cookiecontrol_generatesitecookie() {
 function cookiecontrol_preprocess_html(&$variables) {
   // don't render on admin pages or excluded paths
   if (path_is_admin(current_path()) === FALSE && drupal_match_path(current_path(), variable_get('cookiecontrol_exclude_paths', '')) === FALSE) {
-  
+
     $cookiecontrol_text = addslashes(t(variable_get('cookiecontrol_text', COOKIECONTROL_TEXT)));
     $cookiecontrol_fulltext = addslashes(t(variable_get('cookiecontrol_fulltext', COOKIECONTROL_FULLTEXT)));
-  
+
     // Append the privacy policy link if available
     if ($nid = variable_get('cookiecontrol_privacynode', '')) {
       $cookiecontrol_fulltext .= t('<p>By using our site you accept the terms of our !privacynode.', array('!privacynode' => l('Privacy Policy', 'node/' . $nid)));
     }
-    
+
     // Escape anything that might cause a JavaScript error
     $cookiecontrol_text = str_replace(array("\r\n", "\n", "\r", '  '), '', $cookiecontrol_text);
     $cookiecontrol_fulltext = str_replace(array("\r\n", "\n", "\r", '  '), '', $cookiecontrol_fulltext);
-  
+
     $cookiecontrol_html = str_replace(array("\r\n", "\n", "\r", '  '), '', theme('cookiecontrol'));
     $cookiecontrol_position = variable_get('cookiecontrol_position', 'left');
     $cookiecontrol_shape = variable_get('cookiecontrol_shape', 'triangle');
@@ -109,8 +109,8 @@ function cookiecontrol_preprocess_html(&$variables) {
     $cookiecontrol_countries = variable_get('cookiecontrol_countries', '');
     $cookiecontrol_theme = variable_get('cookiecontrol_theme', 'dark');
     $cookiecontrol_cookiename = cookiecontrol_generatesitecookie();
-    $cookiecontrol_consentmodel = variable_get('cookiecontrol_consentmodel', 'information_only');
-  
+    $cookiecontrol_consentmodel = variable_get('cookiecontrol_consentmodel', 'explicit');
+
     $cookiecontrol_settings = "
     jQuery(document).ready(function($) {
     cookieControl({
@@ -134,12 +134,12 @@ function cookiecontrol_preprocess_html(&$variables) {
         });
       });
     ";
-  
+
     // If country restrictions are specified include the required plugin
     if ($cookiecontrol_countries) {
       drupal_add_js('https://ssl.geoplugin.net/javascript.gp', array('type' => 'external'));
     }
-  
+
     drupal_add_js($cookiecontrol_settings, array(
       'type' => 'inline',
       'preprocess' => TRUE,
@@ -166,17 +166,17 @@ function cookiecontrol_onacceptance() {
   if ($callbacklist = variable_get('cookiecontrol_onaccept', '')) {
     $callbacks = array($callbacklist);
   }
-  
+
   // Hide the Cookie Control icon after acceptance
   if (variable_get('cookiecontrol_hideonaccept', FALSE)) {
     $callbacks[] = "cc.setCookie('ccShowCookieIcon', 'no');jQuery('#ccc-icon').hide();";
   }
-  
+
   // Allow other modules to add their acceptance callback functions in
   drupal_alter('cookieaccept', $callbacks);
-  
+
   $cookiecontrol_acceptancecallback = "function cookiecontrol_accepted(cc) {\n" . implode("\n", $callbacks) . "\n}";
-      
+
   drupal_add_js($cookiecontrol_acceptancecallback, array(
     'type' => 'inline',
     'preprocess' => TRUE,
@@ -192,7 +192,7 @@ function cookiecontrol_onacceptance() {
  */
 function cookiecontrol_cookiesallowed() {
   $callbacks = array();
-  
+
   // Allow other modules to add their cookies allowed callback functions in
   drupal_alter('cookiesallowed', $callbacks);
 
@@ -213,7 +213,7 @@ function cookiecontrol_cookiesallowed() {
  */
 function cookiecontrol_cookiesnotallowed() {
   $callbacks = array();
-  
+
   // Allow other modules to add their no cookies allowed callback functions in
   drupal_alter('cookiesnotallowed', $callbacks);
 
@@ -237,7 +237,7 @@ function cookiecontrol_form_user_login_block_alter(&$form, &$form_state, $form_i
     if (!isset($_COOKIE[cookiecontrol_generatesitecookie()]) || $_COOKIE[cookiecontrol_generatesitecookie()] != 'yes') {
       // Replace all validation callbacks with just one telling the visitor they cannot log in yet
       $form['#validate'] = array('cookiecontrol_user_login_ban');
-      
+
       // Remove any existing submit handlers to prevent any authentication taking place
       unset($form['#submit']);
     }
@@ -263,7 +263,7 @@ function cookiecontrol_userinrestrictedcountry() {
   }
 
   $request = drupal_http_request('http://www.geoplugin.net/php.gp?ip=' . ip_address());
-    
+
   // Ensure a valid response was received
   if ($request->code == 200) {
     $geo_info = unserialize($request->data);
