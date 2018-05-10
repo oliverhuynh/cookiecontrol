@@ -2,7 +2,7 @@
     <div id="ccc-state" class="ccc-pause">
         <div id="ccc-icon">
             <button>
-                <span><?php print t('Our website uses cookies');?></span>
+                <span span="cookie-status">Cookies are <span class="ton">on</span> / <span class="toff">off</span></span>
             </button>
         </div>
         <div class="ccc-widget">
@@ -30,7 +30,8 @@
                         <div id="ccc-explicit-checkbox">
                           <label><input id="cchide-popup" type="checkbox" name="ccc-hide-popup" value="Y" /> <?php print t('Do not ask me again'); ?><br /></label> <?php print t('(Ticking this sets a cookie to hide this popup if you then hit close. This will not store any personal information)'); ?>
                         </div>
-                        <button class="ccc-close"><?php print t('Close');?></button>
+                        <span span="cookie-status">Cookies are <span class="ton">on</span> / <span class="toff">off</span></span>
+                        <button class="ccc-close" title="Close">X</button>
                     </div>
                 </div>
             </div>

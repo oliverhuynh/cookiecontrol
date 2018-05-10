@@ -5,24 +5,24 @@
       plugins: {
         cbdnecessary: {
           required: true,
-          execs: ["ccAddHtmlClass"]
+          execs: ['ccAddHtmlClass']
         },
         cbdpreferenece: {
           required: false,
-          cookies: ["lang", "recent_slide", "atp_jplayer"]
+          cookies: ['lang', 'recent_slide', 'atp_jplayer']
         },
         cbdstatistics: {
           required: false,
-          execs: ["ccAddAnalytics", "ccAddLinkedIn"],
-          cookies: ["_ga", "_gat", "_gid"]
+          execs: ['ccAddAnalytics', 'ccAddLinkedIn'],
+          cookies: ['_ga', '_gat', '_gid']
         },
         cbdmarketing: {
           required: false,
-          execs: ["addThisExec"]
+          execs: ['addThisExec']
         }
       },
       unload: function() {
-        console.warn("Unload and cleaning cookies");
+        console.warn('Unload and cleaning cookies');
         $.each(this.categories, function() {
           return this.unload();
         });
@@ -33,7 +33,8 @@
       attach: function(h) {
         var t;
         this.h = h;
-        this.category.scan($(".cbwrapper"), h);
+        this.category.scan($('.cbwrapper'), h);
+        this.globalToggle.attach.call(this);
         /*
         exec is triggered in cookicontrol 5.1
         if @h.consented()
@@ -44,16 +45,58 @@
           t.unload();
         });
       },
+      globalToggle: {
+        attach: function() {
+          var ccs;
+          ccs = this;
+          $("#cccwr .ton").click(function() {
+            return ccs.allow();
+          });
+          $("#cccwr .toff").click(function() {
+            return ccs.deny();
+          });
+        }
+      },
       categories: [],
       enable: true,
+      enableState: 0, // 0, -1, 1
       accept: function() {},
-      // When user check accept only, not initially
-      deny: function() {
-        return this.enable = false;
+      deny: function(clean) {
+        if (this.enableStat === -1) {
+          return;
+        }
+        this.enableState = -1;
+
+        // Rewrite cookiecontrol
+        CookieControl._jc = false;
+        clean = clean || "na";
+        if (clean === "na") {
+          CookieControl.setCookie(CookieControl.options.cookieName, 'no');
+        } else {
+          CookieControl.setCookie(CookieControl.options.cookieName, '', true);
+        }
+        // Variable
+        $('#cctoggle').removeClass("cctoggle-on");
+        // My stuff
+        this.enable = false;
+        return $("body").removeClass("cs-enabled");
       },
       allow: function() {
+        if (this.enableState === 1) {
+          return;
+        }
+        this.enableState = 1;
+
+        // Rewrite cookiecontrol
+        CookieControl._jc = true;
+        CookieControl.acceptEvent();
+        CookieControl.setCookie(CookieControl.options.cookieName, 'yes');
+        // Variable
+        $('#cctoggle').addClass("cctoggle-on");
+        // My stuff
         this.exec();
-        return this.enable = true;
+        this.enable = true;
+        return $("body").addClass("cs-enabled");
       },
       exec: function() {
         return $.each(this.categories, function() {
@@ -65,22 +108,20 @@
         dom: false,
         c: false,
         h: false,
-        /*
-        Toggle
-        */
         state: true,
         unload: function() {
           var $h, cks;
           if (!this.state || !CookieControlSt.enable) {
             cks = window.CookieControlSt.plugins[this.id].cookies || [];
-            console.warn("Clean cookies for " + this.id);
+            console.warn('Clean cookies for ' + this.id);
             $h = this.h;
             return $.each(cks, function() {
-              var ck, e;
+              var ck, e, error;
               ck = this;
               try {
                 return $h.delCookie(ck);
-              } catch (error) {
+              } catch (error1) {
+                error = error1;
                 e = error;
                 return console.warn(e);
               }
@@ -89,7 +130,7 @@
         },
         doexec: function() {
           var s;
-          s = this.state ? "on" : "off";
+          s = this.state ? 'on' : 'off';
           return this.exec[s].apply(this);
         },
         exec: {
@@ -97,13 +138,14 @@
             var execs, t;
             execs = window.CookieControlSt.plugins[this.id].execs || [];
             t = this;
-            console.warn(this.id + " is allowed and executed");
+            console.warn(this.id + ' is allowed and executed');
             return $.each(execs, function() {
-              var cb, e;
+              var cb, e, error;
               cb = this;
               try {
                 return window[cb].apply(t);
-              } catch (error) {
+              } catch (error1) {
+                error = error1;
                 e = error;
                 return console.warn(e);
               }
@@ -122,24 +164,22 @@
           },
           refresh: function() {
             var s;
-            s = this.state ? "on" : "off";
-            return this.h.setCookie("cat_" + this.id, s);
+            s = this.state ? 'on' : 'off';
+            return this.h.setCookie('cat_' + this.id, s);
           },
-          // Do exec will be executed in next reload only via CookieControl.min
-          // @doexec()
           load: function() {
             var s;
-            s = this.h.getCookie("cat_" + this.id) || "on";
-            this.state = s === "on";
-            this.dom.find(".CBDialogBodyLevelButton").attr("checked", this.state);
+            s = this.h.getCookie('cat_' + this.id) || 'on';
+            this.state = s === 'on';
+            this.dom.find('.CBDialogBodyLevelButton').attr('checked', this.state);
           }
         },
         initToggle: function() {
           var t;
           t = this;
-          this.dom.find(".CBDialogBodyLevelButton").change(function() {
+          this.dom.find('.CBDialogBodyLevelButton').change(function() {
             var s;
-            s = this.checked ? "on" : "off";
+            s = this.checked ? 'on' : 'off';
             t.toggle[s].apply(t);
           });
           // Default state
@@ -148,13 +188,10 @@
         init: function($dom, h) {
           this.dom = $dom;
           this.h = h;
-          this.id = this.dom.attr("id");
-          CookieControl.options.protectedCookies.push("cccat_" + this.id);
+          this.id = this.dom.attr('id');
+          CookieControl.options.protectedCookies.push('cccat_' + this.id);
           this.initToggle();
         },
-        /*
-        Items registration
-        */
         scan: function(cl, h) {
           var t;
           t = this;
