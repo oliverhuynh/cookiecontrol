@@ -35,6 +35,8 @@
         this.h = h;
         this.category.scan($('.cbwrapper'), h);
         this.globalToggle.attach.call(this);
+        // Checkboxes
+        jQuery("#CBDialogBodyLevelButtonsSelectPane").buttonset();
         /*
         exec is triggered in cookicontrol 5.1
         if @h.consented()

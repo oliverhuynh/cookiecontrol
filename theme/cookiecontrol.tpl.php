@@ -2,7 +2,7 @@
     <div id="ccc-state" class="ccc-pause">
         <div id="ccc-icon">
             <button>
-                <span span="cookie-status">Cookies are <span class="ton">on</span> / <span class="toff">off</span></span>
+                <span class="cookie-status">Cookies are <span class="ton">on</span> / <span class="toff">off</span></span>
             </button>
         </div>
         <div class="ccc-widget">
@@ -16,26 +16,30 @@
                         <div id="ccc-cookies-switch" style="background-position-x: 0;">
                           <a id="cctoggle" href="#" style="background-position-x: 0;" name="cctoggle"><span id="cctoggle-text">Cookies test</span></a>
                         </div>
-                        <div id="CBDialogBodyLevelButtonsSelectPane">
-                            <div id="cbdnecessary" class="cbwrapper" title="Mandatory - can not be deselected. Necessary cookies help make a website usable by enabling basic functions like page navigation and access to secure areas of the website. The website cannot function properly without these cookies."><input type="checkbox" id="CBDialogBodyLevelButtonNecessary" class="CBDialogBodyLevelButton CBDialogBodyLevelButtonDisabled" disabled="disabled" checked="checked"><label for="CBDialogBodyLevelButtonNecessary">Necessary</label></div>
-                            <div id="cbdpreferenece" class="cbwrapper" title="Preference cookies enable a website to remember information that changes the way the website behaves or looks, like your preferred language or the region that you are in."><input type="checkbox" id="CBDialogBodyLevelButtonPreferences" class="CBDialogBodyLevelButton" checked="checked" tabindex="1"><label for="CBDialogBodyLevelButtonPreferences">Preferences</label></div>
-                            <div id="cbdstatistics" class="cbwrapper" title="Statistic cookies help website owners to understand how visitors interact with websites by collecting and reporting information anonymously."><input type="checkbox" id="CBDialogBodyLevelButtonStatistics" class="CBDialogBodyLevelButton" checked="checked" tabindex="1"><label for="CBDialogBodyLevelButtonStatistics">Statistics</label></div>
-                            <div id="cbdmarketing" class="cbwrapper" title="Social Sharing/Marketing cookies are used to track visitors across websites. The intention is to display ads that are relevant and engaging for the individual user and thereby more valuable for publishers and third party advertisers. Notice: You may not be able to share if you disallow this."><input type="checkbox" id="CBDialogBodyLevelButtonMarketing" class="CBDialogBodyLevelButton" checked="checked" tabindex="1"><label for="CBDialogBodyLevelButtonMarketing">Marketing</label></div>
-                        </div>
-
-                        <div id="ccc-implicit-warning">
-                          <?php print t('(One cookie will be set to store your preference)'); ?>
+                        <div class="cs-widget-advance dialog-n-others">
+                          <div class="dialog-checkboxes">
+                            <div id="CBDialogBodyLevelButtonsSelectPane">
+                                <div id="cbdnecessary" class="cbwrapper" title="Mandatory - can not be deselected. Necessary cookies help make a website usable by enabling basic functions like page navigation and access to secure areas of the website. The website cannot function properly without these cookies."><input type="checkbox" id="CBDialogBodyLevelButtonNecessary" class="CBDialogBodyLevelButton CBDialogBodyLevelButtonDisabled" disabled="disabled" checked="checked"><label for="CBDialogBodyLevelButtonNecessary">Necessary</label></div>
+                                <div id="cbdpreferenece" class="cbwrapper" title="Preference cookies enable a website to remember information that changes the way the website behaves or looks, like your preferred language or the region that you are in."><input type="checkbox" id="CBDialogBodyLevelButtonPreferences" class="CBDialogBodyLevelButton" checked="checked" tabindex="1"><label for="CBDialogBodyLevelButtonPreferences">Preferences</label></div>
+                                <div id="cbdstatistics" class="cbwrapper" title="Statistic cookies help website owners to understand how visitors interact with websites by collecting and reporting information anonymously."><input type="checkbox" id="CBDialogBodyLevelButtonStatistics" class="CBDialogBodyLevelButton" checked="checked" tabindex="1"><label for="CBDialogBodyLevelButtonStatistics">Statistics</label></div>
+                                <div id="cbdmarketing" class="cbwrapper" title="Social Sharing/Marketing cookies are used to track visitors across websites. The intention is to display ads that are relevant and engaging for the individual user and thereby more valuable for publishers and third party advertisers. Notice: You may not be able to share if you disallow this."><input type="checkbox" id="CBDialogBodyLevelButtonMarketing" class="CBDialogBodyLevelButton" checked="checked" tabindex="1"><label for="CBDialogBodyLevelButtonMarketing">Marketing</label></div>
+                            </div>
+                          </div>
+                          <div id="desc">
+                            <?php print t('(One cookie will be set to store your preference)'); ?>
+                          </div>
                         </div>
 
                         <div id="ccc-explicit-checkbox">
                           <label><input id="cchide-popup" type="checkbox" name="ccc-hide-popup" value="Y" /> <?php print t('Do not ask me again'); ?><br /></label> <?php print t('(Ticking this sets a cookie to hide this popup if you then hit close. This will not store any personal information)'); ?>
                         </div>
-                        <span span="cookie-status">Cookies are <span class="ton">on</span> / <span class="toff">off</span></span>
+                        <div class="cookie-wrapper"><span class="cookie-status">Cookies are <span class="ton">on</span> / <span class="toff">off</span></span></div>
                         <button class="ccc-close" title="Close">X</button>
                     </div>
                 </div>
             </div>
-            <button class="ccc-expand"><?php print t('advance');?></button>
+            <div class="cs-widget-simple"><button class="ccc-expand"><?php print t('Advanced settings');?></button></div>
+            <div class="cs-widget-advance"><button class="ccc-expand"><?php print t('Simple settings');?></button></div>
         </div>
     </div>
 </div>

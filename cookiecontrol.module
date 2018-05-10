@@ -148,6 +148,7 @@ function cookiecontrol_preprocess_html(&$variables) {
       'every_page' => TRUE,
       'cache' => TRUE,
     ));
+    drupal_add_library("system", "ui.button");
 
     // Set-up all the callback functions
     cookiecontrol_onacceptance();
