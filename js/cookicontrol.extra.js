@@ -81,7 +81,9 @@
         $('#cctoggle').removeClass("cctoggle-on");
         // My stuff
         this.enable = false;
-        return $("body").removeClass("cs-enabled");
+        $("body").removeClass("cs-enabled");
+        // Disable all inner checkboxes
+        return this.category.disableAll();
       },
       allow: function() {
         if (this.enableState === 1) {
@@ -98,7 +100,8 @@
         // My stuff
         this.exec();
         this.enable = true;
-        return $("body").addClass("cs-enabled");
+        $("body").addClass("cs-enabled");
+        return this.category.enableAll();
       },
       exec: function() {
         return $.each(this.categories, function() {
@@ -191,6 +194,7 @@
           this.dom = $dom;
           this.h = h;
           this.id = this.dom.attr('id');
+          this.plugin = window.CookieControlSt.plugins[this.id];
           CookieControl.options.protectedCookies.push('cccat_' + this.id);
           this.initToggle();
         },
@@ -201,9 +205,35 @@
             return t.newitem($(this), h);
           });
         },
+        disable: function() {
+          this.dom.find('.CBDialogBodyLevelButton').attr("disabled", "disabled");
+          if (!this.plugin.required) {
+            this.dom.find('.CBDialogBodyLevelButton').removeAttr("checked");
+          }
+          return $("#CBDialogBodyLevelButtonsSelectPane").buttonset("refresh");
+        },
+        enable: function() {
+          if (!this.plugin.required) {
+            this.dom.find('.CBDialogBodyLevelButton').removeAttr("disabled");
+          }
+          if (this.state) {
+            this.dom.find('.CBDialogBodyLevelButton').attr("checked", "checked");
+          }
+          return $("#CBDialogBodyLevelButtonsSelectPane").buttonset("refresh");
+        },
+        disableAll: function() {
+          $(CookieControlSt.categories).each(function() {
+            return this.disable();
+          });
+        },
+        enableAll: function() {
+          $(CookieControlSt.categories).each(function() {
+            return this.enable();
+          });
+        },
         newitem: function(a, h) {
           var t;
-          t = jQuery.extend(true, {}, this);
+          t = $.extend(true, {}, this);
           t.init(a, h);
           CookieControlSt.categories.push(t);
           return t;
