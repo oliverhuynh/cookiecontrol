@@ -34,6 +34,19 @@ function cookiecontrol_admin_settings() {
     '#default_value' => variable_get('cookiecontrol_fulltext', COOKIECONTROL_FULLTEXT),
     '#description' => t('A further information about the use of cookies on this site. HTML markup is allowed for adding links and paragraphs.'),
   );
+  $textfields = array();
+  $textfields['cbdnecessary'] = variable_get('cbdnecessary', "Mandatory - can not be deselected. Necessary cookies help make a website usable by enabling basic functions like page navigation and access to secure areas of the website. The website cannot function properly without these cookies.");
+  $textfields['cbdpreferenece'] = variable_get('cbdpreferenece', "Preference cookies enable a website to remember information that changes the way the website behaves or looks, like your preferred language or the region that you are in.");
+  $textfields['cbdstatistics'] = variable_get('cbdstatistics', "Statistic cookies help website owners to understand how visitors interact with websites by collecting and reporting information anonymously.");
+  $textfields['cbdmarketing'] = variable_get('cbdmarketing', "Social Sharing/Marketing cookies are used to track visitors across websites. The intention is to display ads that are relevant and engaging for the individual user and thereby more valuable for publishers and third party advertisers. Notice: You may not be able to share if you disallow this.");
+  foreach ($textfields as $key => $textfield) {
+    $form['interface'][$key] = array(
+      '#type' => 'textarea',
+      '#title' => t("Title of " . ucfirst(str_replace("cbd", "", $key))),
+      '#default_value' => $textfield,
+      '#description' => t('Title of the checkbox'),
+    );
+  }
 
   $cookiecontrol_privacynode = variable_get('cookiecontrol_privacynode', '');
   $form['interface']['cookiecontrol_privacynode'] = array(
@@ -61,17 +74,6 @@ function cookiecontrol_admin_settings() {
     ),
     '#default_value' => variable_get('cookiecontrol_consentmodel', 'information_only'),
     '#description' => t('Select the consent model you wish Cookie Control to use. In each consent model the Cookie Control panel appears to the user when they first access the site.')
-  );
-
-  $form['interface']['cookiecontrol_shape'] = array(
-    '#type' => 'radios',
-    '#title' => t('Icon Shape'),
-    '#description' => t("The icon will be anchored to the corner of the viewport and won't scroll with your web page."),
-    '#default_value' => variable_get('cookiecontrol_shape', 'triangle'),
-    '#options' => array(
-      'triangle' => t('!icon Triangle', array('!icon' => theme('image', array('path' => $path . '/images/icon-triangle.png')))),
-      'diamond' => t('!icon Diamond', array('!icon' => theme('image', array('path' => $path . '/images/icon-diamond.png'))))
-    )
   );
 
   $form['interface']['cookiecontrol_position'] = array(
@@ -187,7 +189,7 @@ function cookiecontrol_admin_settings_validate($form, &$form_state) {
   if (stripos($form_state['values']['cookiecontrol_text'], '<p>') === FALSE) {
     $form_state['values']['cookiecontrol_text'] = '<p>' . $form_state['values']['cookiecontrol_text'] . '</p>';
   }
-    
+
   // Remove any newlines to avoid breaking JavaScript
   form_set_value($form['interface']['cookiecontrol_text'], str_replace(array("\r\n", "\n", "\r"), '', $form_state['values']['cookiecontrol_text']), $form_state);
   form_set_value($form['interface']['cookiecontrol_fulltext'], str_replace(array("\r\n", "\n", "\r"), '', $form_state['values']['cookiecontrol_fulltext']), $form_state);
